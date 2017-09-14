@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Clr.Cli
+namespace Clr.Loader.Cli
 {
     class Program
     {

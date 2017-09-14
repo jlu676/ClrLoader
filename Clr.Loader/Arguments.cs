@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace Clr.Cli
+namespace Clr.Loader.Cli
 {
     public class Arguments
     {

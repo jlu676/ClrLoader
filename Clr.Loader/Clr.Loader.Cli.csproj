@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{61F00F9E-DD0B-447A-B324-BEE30B166A71}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Clr.Cli</RootNamespace>
-    <AssemblyName>Clr.Cli</AssemblyName>
+    <RootNamespace>Clr.Loader.Cli</RootNamespace>
+    <AssemblyName>Clr.Loader.Cli</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

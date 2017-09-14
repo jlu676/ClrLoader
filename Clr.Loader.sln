@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr.Cli", "Clr.Loader\Clr.Cli.csproj", "{61F00F9E-DD0B-447A-B324-BEE30B166A71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr.Loader.Cli", "Clr.Loader\Clr.Loader.Cli.csproj", "{61F00F9E-DD0B-447A-B324-BEE30B166A71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr.Shared", "Clr.Shared\Clr.Shared.csproj", "{4D3FFF28-6E87-416B-BBD8-997E96AA5103}"
 EndProject

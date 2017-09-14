@@ -6,7 +6,7 @@ using System.Linq;
 using NDesk.Options;
 using Clr.Loader;
 
-namespace Clr.Cli
+namespace Clr.Loader.Cli
 {
     public static class CliHelper
     {
