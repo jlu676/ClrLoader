@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clr.Loader
+namespace Clr.Cli
 {
     public enum Commands
     {
@@ -27,14 +27,5 @@ namespace Clr.Loader
             "\n\r --help | -h")]
         view,
     }
-
-    public enum permissionSetType
-    {
-        SAFE,
-        EXTERNAL_ACCESS,
-        UNSAFE
-    };
-
-
 
 }

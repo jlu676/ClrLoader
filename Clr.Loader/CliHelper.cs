@@ -4,9 +4,9 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using NDesk.Options;
+using Clr.Loader;
 
-
-namespace Clr.Loader
+namespace Clr.Cli
 {
     public static class CliHelper
     {

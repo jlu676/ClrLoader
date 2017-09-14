@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{61F00F9E-DD0B-447A-B324-BEE30B166A71}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Clr.Loader</RootNamespace>
-    <AssemblyName>Clr.Loader</AssemblyName>
+    <RootNamespace>Clr.Cli</RootNamespace>
+    <AssemblyName>Clr.Cli</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -49,7 +49,6 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="CliHelper.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="LoaderHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Clr.Loader1\Clr.Loader.csproj">
+      <Project>{873D32B9-9D98-409C-92B6-5EE14DF68028}</Project>
+      <Name>Clr.Loader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Clr.Shared\Clr.Shared.csproj">
       <Project>{4d3fff28-6e87-416b-bbd8-997e96aa5103}</Project>
       <Name>Clr.Shared</Name>
