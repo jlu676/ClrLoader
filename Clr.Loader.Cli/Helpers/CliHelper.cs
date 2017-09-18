@@ -2,42 +2,54 @@
 using Clr.Shared;
 using System;
 using System.ComponentModel;
-using System.Linq;
-using NDesk.Options;
-using Clr.Loader;
+using Clr.Loader.Cli.Models;
 
-namespace Clr.Loader.Cli
+namespace Clr.Loader.Cli.Helpers
 {
     public static class CliHelper
     {
 
         public static void Run(string[] args)
         {
-            var arguments = ParseArgs(args);
 
-            if (arguments.Help)
+            try
             {
-                DisplayHelp(arguments.Command);
-                return;
+                var arguments = new Arguments(args);
+
+                if (arguments.Help)
+                {
+                    if(arguments.Command == Commands.Invalid)
+                    {
+                        Console.WriteLine($"Comand {arguments.InvalidCommand} is not a valid command or shortcut");
+                    }
+
+                    DisplayHelp(arguments.Command);
+                    return;
+                }
+
+                switch (arguments.Command)
+                {
+                    case Commands.install:
+                        Console.WriteLine(Install(arguments));
+                        break;
+                    case Commands.uninstall:
+                        Console.WriteLine(Uninstall(arguments));
+                        break;
+                    case Commands.view:
+                        Console.WriteLine(View(arguments));
+                        break;
+                    case Commands.Invalid:
+                        Console.WriteLine($"{arguments.InvalidCommand} is an invalid command");
+                        break;
+                    default:
+                        DisplayHelp();
+                        break;
+                }
+
             }
-
-            switch (arguments.Command)
+            catch (Exception ex)
             {
-                case Commands.install:
-                    Console.WriteLine(Install(arguments));
-                    break;
-                case Commands.uninstall:
-                    Console.WriteLine(Uninstall(arguments));
-                    break;
-                case Commands.view:
-                    Console.WriteLine(View(arguments));
-                    break;
-                case Commands.Invalid:
-                    Console.WriteLine($"{arguments.InvalidCommand} is an invalid command");
-                    break;
-                default:
-                    DisplayHelp();
-                    break;
+                ConsoleHelper.WriteError(ex);
             }
         }
 
@@ -115,7 +127,6 @@ namespace Clr.Loader.Cli
             return "Uninstall Completed!!";
         }
 
-
         private static string View(Arguments arguments)
         {
 
@@ -135,11 +146,8 @@ namespace Clr.Loader.Cli
             return "";
         }
 
-
-
         private static string CheckConnectionString(string conn)
         {
-
             var sqlHelper = new SqlHelper(conn);
             return sqlHelper.CheckConnection();
         }
@@ -168,53 +176,61 @@ namespace Clr.Loader.Cli
             }
         }
 
-        private static Arguments ParseArgs(string[] args)
-        {
-            var commandString = args.Length >= 1 ? args[0].Trim().ToLower() : "";
-            var arguments = new Arguments(commandString);
+        //private static Arguments ParseArgs(string[] args)
+        //{
+        //    var commandString = args.Length >= 1 ? args[0].Trim().ToLower() : "";
+        //    var arguments = new Arguments(commandString);
 
-            if (arguments.Command != Commands.Invalid && arguments.Command != Commands.None)
-            {
-                args = args.Where((val, idx) => idx != 0).ToArray();
-            }
+        //    if (arguments.Command != Commands.Invalid && arguments.Command != Commands.None)
+        //    {
+        //        args = args.Where((val, idx) => idx != 0).ToArray();
+        //    }
+        //    else
+        //    {
+        //        arguments.
+        //    }
 
-            string xmlFilePath = "";
+        //    string xmlFilePath = "";
 
-            var extras = new OptionSet(){
-                { "xml|x=",x=> xmlFilePath = x},
-                { "conn|c=",x=> arguments.ConnectionString = x },
-                { "path|p=", x=> arguments.Path = PathFormater(x) },
-                { "dir|d=", x=> arguments.Directory = x },
-                { "assembly|a=", x=> arguments.AssemblyName = x },
-                { "h|?|help", v => arguments.Help = v != null}
-            }.Parse(args);
+        //    var extras = new OptionSet(){
+        //        { "xml|x=",x=> xmlFilePath = IoHelper.PathFormater(x)},
+        //        { "conn|c=",x=> arguments.ConnectionString = x },
+        //        { "path|p=", x=> arguments.Path = IoHelper.PathFormater(x) },
+        //        { "dir|d=", x=> arguments.Directory = x },
+        //        { "assemblyname|a=", x=> arguments.AssemblyName = x },
+        //        { "h|?|help", v => arguments.Help = v != null}
+        //    }.Parse(args);
 
-            if (!string.IsNullOrEmpty(xmlFilePath))
-            {
-                arguments = ParseXmlArguments(arguments);
-            }
+        //    if (!string.IsNullOrEmpty(xmlFilePath))
+        //    {
+        //        arguments = ParseXmlArguments(arguments, xmlFilePath);
+        //    }
 
-            return arguments;
-        }
+        //    return arguments;
+        //}
 
-        private static Arguments ParseXmlArguments(Arguments clrArguments)
-        {
+        //private static Arguments ParseXmlArguments(Arguments clrArguments, string XmlFilePath)
+        //{
+        //    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(XmlFilePath))))
+        //    {
+        //        var serializer = new XmlSerializer(typeof(Arguments));
+        //        var result = (Arguments)serializer.Deserialize(reader);
+        //        var properties = typeof(Arguments).GetProperties().Where(x => x.IsDefined(typeof(XmlElementAttribute), false));
+
+        //        foreach (var property in properties)
+        //        {
+        //            var value = property.GetValue(result);
+
+        //            if ((value != null && !(value is string)) || (value is string && !string.IsNullOrEmpty(value.ToString())))
+        //            {
+        //                property.SetValue(clrArguments, value);
+        //            } 
+        //        }
+        //    }
+        //    return clrArguments;
+        //}
 
 
-
-            return clrArguments;
-        }
-
-
-        private static string PathFormater(string path)
-        {
-            if(!Path.IsPathRooted(path))
-            {
-                path = Path.Combine(Directory.GetCurrentDirectory(),path);
-            }
-
-            return path;
-        }
 
 
     }

@@ -7,7 +7,7 @@
     <ProjectGuid>{61F00F9E-DD0B-447A-B324-BEE30B166A71}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Clr.Loader.Cli</RootNamespace>
-    <AssemblyName>Clr.Loader.Cli</AssemblyName>
+    <AssemblyName>ClrLoader</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -46,18 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arguments.cs" />
-    <Compile Include="CliHelper.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="Attributes\ShortCut.cs" />
+    <Compile Include="Helpers\ConsoleHelper.cs" />
+    <Compile Include="Helpers\IoHelper.cs" />
+    <Compile Include="Models\Arguments.cs" />
+    <Compile Include="Helpers\CliHelper.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Clr.Loader1\Clr.Loader.csproj">
+    <ProjectReference Include="..\Clr.Loader\Clr.Loader.csproj">
       <Project>{873D32B9-9D98-409C-92B6-5EE14DF68028}</Project>
       <Name>Clr.Loader</Name>
     </ProjectReference>
@@ -70,7 +72,9 @@
     <Content Include="ArgumentsTemplate.xml" />
     <Content Include="testargs.xml">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

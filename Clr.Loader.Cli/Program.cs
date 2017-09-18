@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Clr.Loader.Cli.Helpers;
 
 namespace Clr.Loader.Cli
 {
@@ -13,10 +13,7 @@ namespace Clr.Loader.Cli
             }
             catch(Exception ex)
             {
-                var oldColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.ToString());
-                Console.ForegroundColor = oldColor;
+                ConsoleHelper.WriteError(ex);
             }
         }
 

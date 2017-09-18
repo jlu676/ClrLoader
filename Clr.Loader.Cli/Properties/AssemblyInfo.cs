@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Clr.Loader1")]
+[assembly: AssemblyTitle("ClrLoader")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Clr.Loader1")]
+[assembly: AssemblyProduct("ClrLoader")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("873d32b9-9d98-409c-92b6-5ee14df68028")]
+[assembly: Guid("61f00f9e-dd0b-447a-b324-bee30b166a71")]
 
 // Version information for an assembly consists of the following four values:
 //
