@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Xml.Serialization;
 
 namespace Clr.Loader.Cli
 {
+    [XmlRoot("clrarguments")]
     public class Arguments
     {
 
@@ -21,10 +23,10 @@ namespace Clr.Loader.Cli
             Command = command == Commands.None ? Commands.Invalid : command;
             InvalidCommand = command == Commands.Invalid ? commandString : "";
         }
-
         public Commands Command { get; set; }
         public string InvalidCommand { get; set; }
         public Boolean Help { get; set; }
+        [XmlElement("ConnectionString")]
         public string ConnectionString {
             get
             {
@@ -65,8 +67,11 @@ namespace Clr.Loader.Cli
                 }
             }
         }
+        [XmlElement("directory")]
         public string Directory { get; set; }
+        [XmlElement("path")]
         public string Path { get; set; }
-        public string Assembly { get; set; }
+        [XmlElement("assemblyname")]
+        public string AssemblyName { get; set; }
     }
 }

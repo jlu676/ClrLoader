@@ -91,7 +91,7 @@ namespace Clr.Loader.Cli
 
         private static string Uninstall(Arguments arguments)
         {
-            if (string.IsNullOrEmpty(arguments.Assembly))
+            if (string.IsNullOrEmpty(arguments.AssemblyName))
             {
                 return $"Assembly is empty";
             }
@@ -110,7 +110,7 @@ namespace Clr.Loader.Cli
 
             var clrHelper = new LoaderHelper(arguments.ConnectionString);
 
-            clrHelper.UninstallClrAssembly(arguments.Assembly);
+            clrHelper.UninstallClrAssembly(arguments.AssemblyName);
 
             return "Uninstall Completed!!";
         }
@@ -178,17 +178,31 @@ namespace Clr.Loader.Cli
                 args = args.Where((val, idx) => idx != 0).ToArray();
             }
 
-            var extras = new OptionSet(){
+            string xmlFilePath = "";
 
-            { "conn|c=",x=> arguments.ConnectionString = x },
+            var extras = new OptionSet(){
+                { "xml|x=",x=> xmlFilePath = x},
+                { "conn|c=",x=> arguments.ConnectionString = x },
                 { "path|p=", x=> arguments.Path = PathFormater(x) },
                 { "dir|d=", x=> arguments.Directory = x },
-                { "assembly|a=", x=> arguments.Assembly = x },
+                { "assembly|a=", x=> arguments.AssemblyName = x },
                 { "h|?|help", v => arguments.Help = v != null}
             }.Parse(args);
 
-            //var extra1 = p.Parse(args);
+            if (!string.IsNullOrEmpty(xmlFilePath))
+            {
+                arguments = ParseXmlArguments(arguments);
+            }
+
             return arguments;
+        }
+
+        private static Arguments ParseXmlArguments(Arguments clrArguments)
+        {
+
+
+
+            return clrArguments;
         }
 
 
