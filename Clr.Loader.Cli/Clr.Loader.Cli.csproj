@@ -52,6 +52,7 @@
     <Compile Include="Models\Arguments.cs" />
     <Compile Include="Helpers\CliHelper.cs" />
     <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\XmlArguments.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

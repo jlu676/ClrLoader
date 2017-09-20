@@ -3,6 +3,7 @@ using Clr.Shared;
 using System;
 using System.ComponentModel;
 using Clr.Loader.Cli.Models;
+using System.Collections.Generic;
 
 namespace Clr.Loader.Cli.Helpers
 {
@@ -18,11 +19,6 @@ namespace Clr.Loader.Cli.Helpers
 
                 if (arguments.Help)
                 {
-                    if(arguments.Command == Commands.Invalid)
-                    {
-                        Console.WriteLine($"Comand {arguments.InvalidCommand} is not a valid command or shortcut");
-                    }
-
                     DisplayHelp(arguments.Command);
                     return;
                 }
@@ -38,14 +34,26 @@ namespace Clr.Loader.Cli.Helpers
                     case Commands.view:
                         Console.WriteLine(View(arguments));
                         break;
+                    case Commands.generate:
+                        Console.WriteLine(GenerateXml(arguments));
+                        break;
                     case Commands.Invalid:
-                        Console.WriteLine($"{arguments.InvalidCommand} is an invalid command");
+                        Console.WriteLine($"{arguments.InvalidCommand} is not a valid command or shortcut");
+                        DisplayHelp(arguments.Command);
+                        break;
+                    case Commands.ExtraArguments:
+                        Console.WriteLine("There are extra uneeded paramaters");
+
+                        foreach (var arg in arguments.ExtraArguments)
+                        {
+                            Console.WriteLine($"Uneeded argument : {arg}");
+                        }
+                        DisplayHelp();
                         break;
                     default:
                         DisplayHelp();
                         break;
                 }
-
             }
             catch (Exception ex)
             {
@@ -146,6 +154,19 @@ namespace Clr.Loader.Cli.Helpers
             return "";
         }
 
+        private static string GenerateXml(Arguments arguments)
+        {   
+            var xmlArguments = new XmlArguments {
+                AssemblyName = "{AssemblyName}",
+                CommandString = "{CommandString}",
+                ConnectionString = "{ConnectionString }",
+                Directory ="{Directory}",
+                Path ="{Path}" };
+            var path = IoHelper.Filecheck(IoHelper.PathFormater(arguments.Path));
+            IoHelper.WriteXmlStringToFile(path, xmlArguments);
+            return "completed";
+        }
+
         private static string CheckConnectionString(string conn)
         {
             var sqlHelper = new SqlHelper(conn);
@@ -154,7 +175,9 @@ namespace Clr.Loader.Cli.Helpers
 
         private static void DisplayHelp(Commands command = Commands.None)
         {
-            if (command != Commands.None && command != Commands.Invalid)
+            List<Commands> nonHelpCommands = new List<Commands> { Commands.None, Commands.Invalid, Commands.ExtraArguments };
+
+            if (!nonHelpCommands.Contains(command))
             {
                 Console.WriteLine($"{command.ToString()}");
 
@@ -166,72 +189,15 @@ namespace Clr.Loader.Cli.Helpers
             }
             else
             {
+                Console.WriteLine("\n\r --commands | -C The name of the command you wish to run ");
                 foreach (Commands e in Enum.GetValues(typeof(Commands)))
                 {
-                    if (e != Commands.None && e != Commands.Invalid)
+                    if (!nonHelpCommands.Contains(e))
                     {
                         DisplayHelp(e);
                     }
                 }
             }
         }
-
-        //private static Arguments ParseArgs(string[] args)
-        //{
-        //    var commandString = args.Length >= 1 ? args[0].Trim().ToLower() : "";
-        //    var arguments = new Arguments(commandString);
-
-        //    if (arguments.Command != Commands.Invalid && arguments.Command != Commands.None)
-        //    {
-        //        args = args.Where((val, idx) => idx != 0).ToArray();
-        //    }
-        //    else
-        //    {
-        //        arguments.
-        //    }
-
-        //    string xmlFilePath = "";
-
-        //    var extras = new OptionSet(){
-        //        { "xml|x=",x=> xmlFilePath = IoHelper.PathFormater(x)},
-        //        { "conn|c=",x=> arguments.ConnectionString = x },
-        //        { "path|p=", x=> arguments.Path = IoHelper.PathFormater(x) },
-        //        { "dir|d=", x=> arguments.Directory = x },
-        //        { "assemblyname|a=", x=> arguments.AssemblyName = x },
-        //        { "h|?|help", v => arguments.Help = v != null}
-        //    }.Parse(args);
-
-        //    if (!string.IsNullOrEmpty(xmlFilePath))
-        //    {
-        //        arguments = ParseXmlArguments(arguments, xmlFilePath);
-        //    }
-
-        //    return arguments;
-        //}
-
-        //private static Arguments ParseXmlArguments(Arguments clrArguments, string XmlFilePath)
-        //{
-        //    using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(XmlFilePath))))
-        //    {
-        //        var serializer = new XmlSerializer(typeof(Arguments));
-        //        var result = (Arguments)serializer.Deserialize(reader);
-        //        var properties = typeof(Arguments).GetProperties().Where(x => x.IsDefined(typeof(XmlElementAttribute), false));
-
-        //        foreach (var property in properties)
-        //        {
-        //            var value = property.GetValue(result);
-
-        //            if ((value != null && !(value is string)) || (value is string && !string.IsNullOrEmpty(value.ToString())))
-        //            {
-        //                property.SetValue(clrArguments, value);
-        //            } 
-        //        }
-        //    }
-        //    return clrArguments;
-        //}
-
-
-
-
     }
 }

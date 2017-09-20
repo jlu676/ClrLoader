@@ -9,7 +9,6 @@ clr.functions*
 *.xml
 
 #custom include
-!ArgumentsTemplate.xml
 
 
 # User-specific files

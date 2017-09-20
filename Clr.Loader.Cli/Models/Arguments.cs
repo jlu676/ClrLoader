@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Xml.Serialization;
 using System.Linq;
 using NDesk.Options;
@@ -12,11 +10,10 @@ using Clr.Loader.Cli.Attributes;
 
 namespace Clr.Loader.Cli.Models
 {
-    [XmlRoot("clrarguments")]
-    public class Arguments
+    
+    public class Arguments : XmlArguments
     {
-
-        private SecureString _secureConnectionString;
+        #region constructors
 
         public Arguments()
         {
@@ -26,71 +23,61 @@ namespace Clr.Loader.Cli.Models
         public Arguments(string[] args)
         {
             Command = Commands.None;
-            ParseCommand(args);
             ParseArgs(args);
-
-            if (!string.IsNullOrEmpty(XmlFilePath))
-            {
-                ParseXmlArguments();
-            }
         }
 
-        private void ParseCommand(string[] args)
+        #endregion
+
+        #region properties
+
+        public string XmlFilePath { get; set; }
+
+        public Commands Command { get; set; }
+        public string InvalidCommand { get; set; }
+        public Boolean Help { get; set; }
+        public string[] ExtraArguments { get; set; }
+
+        #endregion
+
+        #region private methods 
+
+        public override void SetCommand(string commandString)
         {
-            var commandString = args.Length >= 1 ? args[0].Trim().ToLower() : "";
-
-            Commands command = Commands.None;
-
-            if (commandString.Length <= 1)
-            {
-                var shortcutCommand = typeof(Commands).GetFields().Where(x => x.GetCustomAttributes(typeof(ShortCut), false).Count() >= 1)
-                    .Where(x=> ((ShortCut)x.GetCustomAttributes(typeof(ShortCut), false).SingleOrDefault()).Key == commandString.ToLower().ToCharArray()[0]).SingleOrDefault();
-
-                if (shortcutCommand != null)
-                {
-                    command = (Commands)shortcutCommand.GetValue(shortcutCommand);
-                }
-                else
-                {
-                    command = Commands.None;
-                }
-            }
-            else
-            {
-                Enum.TryParse(commandString, out command);             
-            }
-
-            Command = command == Commands.None ? Commands.Invalid : command;
-
-            if  (Command == Commands.Invalid)
-            {
-                InvalidCommand =  commandString;
-                Help = true;
-            }           
+            base.SetCommand(commandString);
+            Command = ParseCommand(_commandString);
         }
 
-        private void ParseArgs(string[] args)
+        private void ParseArgs(string[] args, bool HasCommand = true)
         {
-            //remove command string
-            args = args.Where((val, idx) => idx != 0).ToArray();
-
-            var extras = new OptionSet(){
+            ExtraArguments = new OptionSet(){
                 { "xml|x=",x=> XmlFilePath = IoHelper.PathFormater(x)},
                 { "conn|c=",x=> ConnectionString = x },
                 { "path|p=", x=> Path = IoHelper.PathFormater(x) },
                 { "dir|d=", x=> Directory = x },
                 { "assemblyname|a=", x=> AssemblyName = x },
+                { "command|C=", x=> CommandString = x },
                 { "h|?|help", v => Help = v != null}
-            }.Parse(args);
+            }.Parse(args).ToArray();
+
+
+            if (ExtraArguments.Count() > 0)
+            {
+                Command = Commands.ExtraArguments;
+            }
+            else if (!string.IsNullOrEmpty(XmlFilePath))
+            {
+                ParseXmlArguments();
+            }
         }
 
         private void ParseXmlArguments()
         {
             using (var reader = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(XmlFilePath))))
             {
-                var serializer = new XmlSerializer(GetType());
-                var result = (Arguments)serializer.Deserialize(reader);
-                var properties = typeof(Arguments).GetProperties().Where(x => x.IsDefined(typeof(XmlElementAttribute), false));
+                var xmlType = typeof(XmlArguments);
+                var serializer = new XmlSerializer(xmlType);
+                var result = Convert.ChangeType(serializer.Deserialize(reader), xmlType);
+                var properties = xmlType.GetProperties();
 
                 foreach (var property in properties)
                 {
@@ -103,55 +90,41 @@ namespace Clr.Loader.Cli.Models
                 }
             }
         }
-        public string XmlFilePath { get; set; }
-        public Commands Command { get; set; }
-        public string InvalidCommand { get; set; }
-        public Boolean Help { get; set; }
-        [XmlElement("ConnectionString")]
-        public string ConnectionString {
-            get
+
+        private Commands ParseCommand(string commandString)
+        {
+            Commands command = Commands.None;
+
+            if (commandString.Length <= 1)
             {
-                if (_secureConnectionString != null)
+                var shortcutCommand = typeof(Commands).GetFields().Where(x => x.GetCustomAttributes(typeof(ShortCut), false).Count() >= 1)
+                    .Where(x => ((ShortCut)x.GetCustomAttributes(typeof(ShortCut), false).SingleOrDefault()).Key == commandString.ToLower().ToCharArray()[0]).SingleOrDefault();
+
+                if (shortcutCommand != null)
                 {
-                    IntPtr valuePtr = IntPtr.Zero;
-                    try
-                    {
-                        valuePtr = Marshal.SecureStringToGlobalAllocUnicode(_secureConnectionString);
-                        return Marshal.PtrToStringUni(valuePtr);
-                    }
-                    finally
-                    {
-                        Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
-                    }
+                    command = (Commands)shortcutCommand.GetValue(shortcutCommand);
                 }
                 else
                 {
-                    return "";
+                    command = Commands.None;
                 }
             }
-            set
+            else
             {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    if (_secureConnectionString != null)
-                    {
-                        _secureConnectionString.Clear();
-                    }
-                    else
-                    {
-                        _secureConnectionString = new SecureString();
-                    }
-                    foreach (char c in value)
-                        _secureConnectionString.AppendChar(c);
-
-                    _secureConnectionString.MakeReadOnly();
-                }
+                Enum.TryParse(commandString, out command);
             }
+
+            command = command == Commands.None ? Commands.Invalid : command;
+
+            if (Command == Commands.Invalid)
+            {
+                InvalidCommand = commandString;
+                Help = true;
+            }
+
+            return command;
         }
-        [XmlElement("directory")]
-        public string Directory { get; set; }
-        [XmlElement("path")]
-        public string Path { get; set; }
-        public string AssemblyName { get; set; }
+
+        #endregion
     }
 }

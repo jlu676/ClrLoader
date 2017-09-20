@@ -17,8 +17,6 @@ namespace Clr.Loader
         private permissionSetType _permissionSet;
         private string _assemblyName;
 
-
-
         public LoaderHelper()
         {
 
@@ -30,8 +28,6 @@ namespace Clr.Loader
         {
             _sqlHelper = new SqlHelper(Connection);
         }
-
-
 
         #region Installer
 

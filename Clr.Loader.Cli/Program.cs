@@ -11,10 +11,13 @@ namespace Clr.Loader.Cli
             {
                 CliHelper.Run(args);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ConsoleHelper.WriteError(ex);
             }
+#if DEBUG
+            Console.ReadKey();
+#endif
         }
 
     }
