@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using Clr.Loader.Cli.Models;
 using System.Collections.Generic;
+using Clr.Loader.Cli.Attributes;
 
 namespace Clr.Loader.Cli.Helpers
 {
@@ -181,7 +182,7 @@ namespace Clr.Loader.Cli.Helpers
             {
                 Console.WriteLine($"{command.ToString()}");
 
-                foreach (DescriptionAttribute attribute in command.GetType().GetField(command.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))
+                foreach (CommandAttribute attribute in command.GetType().GetField(command.ToString()).GetCustomAttributes(typeof(CommandAttribute), false))
                 {
                     Console.WriteLine($"{attribute.Description}");
                 }

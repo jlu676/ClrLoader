@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ShortCut.cs" />
+    <Compile Include="Attributes\CommandAttribute.cs" />
     <Compile Include="Helpers\ConsoleHelper.cs" />
     <Compile Include="Helpers\IoHelper.cs" />
     <Compile Include="Models\Arguments.cs" />
@@ -69,11 +69,6 @@
       <Project>{4d3fff28-6e87-416b-bbd8-997e96aa5103}</Project>
       <Name>Clr.Shared</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="testargs.xml">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

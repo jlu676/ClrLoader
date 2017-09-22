@@ -97,8 +97,8 @@ namespace Clr.Loader.Cli.Models
 
             if (commandString.Length <= 1)
             {
-                var shortcutCommand = typeof(Commands).GetFields().Where(x => x.GetCustomAttributes(typeof(ShortCut), false).Count() >= 1)
-                    .Where(x => ((ShortCut)x.GetCustomAttributes(typeof(ShortCut), false).SingleOrDefault()).Key == commandString.ToLower().ToCharArray()[0]).SingleOrDefault();
+                var shortcutCommand = typeof(Commands).GetFields().Where(x => x.GetCustomAttributes(typeof(CommandAttribute), false).Count() >= 1)
+                    .Where(x => ((CommandAttribute)x.GetCustomAttributes(typeof(CommandAttribute), false).SingleOrDefault()).ShortCutKey == commandString.ToLower().ToCharArray()[0]).SingleOrDefault();
 
                 if (shortcutCommand != null)
                 {
